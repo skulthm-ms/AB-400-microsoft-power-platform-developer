@@ -306,10 +306,20 @@ You've now seen the corrected script run end to end: a warning and an allowance 
 
 If you've finished exploring, remove the customizations you added in this exercise.
 
-1. In the maker portal, select **Solutions**.
+> **Important**: This exercise creates an unmanaged solution. Deleting that solution removes only its container, not the command, form event handler, or web resource. Remove those lab-owned customizations first. Don't delete the shared app, the **Information** form, or any unrelated commands or event handlers.
 
-1. Select **EquipmentProvisioningLab06**, select **...**, and then select **Delete**.
+1. In the maker portal, open the solution you created, **Equipment Provisioning Lab 06**, and edit the **Equipment Provisioning** app. Open the **Request** table's command bar editor and choose **Main form**.
 
-1. Confirm the deletion.
+1. Select the **Send to fulfillment** command you created in this exercise, delete it, and select **Save and Publish**. Return to the app designer and publish the app.
+
+1. Open the Request **Information** form in the form designer. Under **Events** > **On Load**, remove only the handler whose function is `EquipmentProvisioning.Lab06.onFormLoad`.
+
+1. Under **Form libraries**, remove **Equipment provisioning lab 06 script** (`eqp_requestscript`) from this form. Save and publish the form.
+
+1. Return to the lab solution's component list and select the **Equipment provisioning lab 06 script** web resource. Select **Delete from this environment**, not **Remove from this solution**, and confirm. If dependencies prevent deletion, check that the lab's command and handler references are removed and published; don't delete unrelated components to resolve the dependency.
+
+1. Return to **Solutions**, select the lab solution using the **Name** value you noted when you created it, and delete its container.
+
+1. Reopen a request in **Equipment Provisioning**. Confirm the lab's **Send to fulfillment** command and its eligibility/allowance notifications are no longer present, and the form loads without a missing-library error.
 
 Don't delete the **Equipment Provisioning (base)** solution or any seed data rows — other exercises depend on them.

@@ -35,7 +35,7 @@ This exercise starts from a supplied solution that contains a working, but naive
 
 1. Open the **Equipment Provisioning lab 08** solution once the import finishes, and select the component list filter for **Cloud flows**. You should see **Lab 08 approval flow** and **Lab 08 fulfilment child flow**, both showing **Off** — the supplied solution ships with both flows turned off.
 
-1. Select **Lab 08 approval flow**, and on the command bar select **Turn on**. Repeat for **Lab 08 fulfilment child flow**. You should see **On** in the status column for both.
+1. Leave both flows **Off** while you prepare the starting data. If you're repeating this exercise and either flow is already on, turn it off and wait for any in-progress runs to finish before continuing.
 
 1. Prepare a Microsoft Entra service principal for later in this exercise:
 
@@ -55,6 +55,8 @@ This exercise starts from a supplied solution that contains a working, but naive
     1. Select a **Business unit**, then select the edit icon next to security roles and assign **Equipment Integration** and **Basic User**. Select **Save**, confirm the role assignment, and select **Create**.
 
 1. Switch back to the Power Apps maker portal, open the **Equipment Provisioning** app, open the **Requests** view, and select **Reset lab data** on the command bar. Wait for it to finish, then select **Refresh**.
+
+1. In the **Equipment Provisioning lab 08** solution, turn on **Lab 08 fulfilment child flow**, then **Lab 08 approval flow**. Confirm both show **On**.
 
 You should see a confirmation dialog summarizing what was reset, the application user listed under **Application users** with **Equipment Integration** and **Basic User**, and both Lab 08 flows showing **On**.
 
@@ -178,7 +180,11 @@ Instead of running the fulfilment steps inline, delegate them to the supplied **
 
 1. Save the flow.
 
-1. Test it: in the **Equipment Provisioning** app, open `REQ-SEED-002` — now showing **In fulfillment** from the previous task — change **Request status** back to **Submitted**, save, then change it to **Approved** again, and save.
+1. Prepare the test request: in the **Equipment Provisioning** app, open `REQ-SEED-002`, now showing **In fulfillment** from the previous task. Set **Request status** to **Submitted**, set **Availability** to **Not checked**, clear **Processing note**, and save.
+
+    The previous test set availability to **Available**. The `Is_newly_approved` condition requires **Not checked** as well as **Approved**, so changing only the status wouldn't run the child flow.
+
+1. Set **Request status** to **Approved** and save.
 
 1. Check **Run history**. You should see a new, successful run, and `REQ-SEED-002`'s **Processing note** should now read "Fulfilment started on … **by the child flow**" — proof that the child flow ran, not the parent's old inline action.
 
@@ -213,9 +219,13 @@ You should see the flow's details page report a healthy connection, with no sign
 
 Now put the whole chain under stress: force the availability check to fail on every attempt, and confirm the flow recovers gracefully instead of failing silently.
 
-1. In **Solutions** > **Equipment Provisioning (base)**, filter components to **Environment Variables**, select **Availability mode**, set its **Current value** to `Error`, and save and publish.
+1. Turn off **Lab 08 approval flow** and wait for any in-progress runs to finish.
 
 1. In the **Equipment Provisioning** app, open the **Requests** view and select **Reset lab data** again. Wait for it to finish, then select **Refresh**. This restores `REQ-SEED-003` to **Submitted**.
+
+    Keep the parent flow off during the reset so it doesn't process the baseline approval on `REQ-SEED-004`.
+
+1. In **Solutions** > **Equipment Provisioning (base)**, filter components to **Environment Variables**, select **Availability mode**, set its **Current value** to `Error`, and save and publish. Turn **Lab 08 approval flow** back on.
 
 1. Open `REQ-SEED-003`, change **Request status** to **Approved**, and save.
 
@@ -236,10 +246,12 @@ You have successfully completed this exercise.
 
 ## Clean up
 
-1. Turn off **Lab 08 approval flow** and **Lab 08 fulfilment child flow** (select each flow, then select **Turn off** on the command bar). This is essential: left on, a later **Reset lab data** run — in this exercise or another — can silently restore `REQ-SEED-004` to a state the flow reacts to.
+1. Turn off **Lab 08 approval flow** and wait for any in-progress parent and child runs to finish. Then turn off **Lab 08 fulfilment child flow**. This is essential: left on, a later **Reset lab data** run can restore `REQ-SEED-004` to a state the parent flow reacts to.
 
 1. In the [Microsoft Entra admin center](https://entra.microsoft.com){:target="_blank"} at `https://entra.microsoft.com`, open the `ab400-lab08-flow` app registration, select **Certificates & secrets**, and delete the client secret you created. Leave the app registration and the application user in place, so you can select them again if you repeat this exercise.
 
 1. In **Solutions** > **Equipment Provisioning (base)**, filter components to **Environment Variables**, select **Availability mode**, clear its **Current value** so it falls back to the `Available` default, and save and publish.
 
-**Reset lab data** already restored `REQ-SEED-003` and `REQ-SEED-004` to their baseline values, so you don't need to touch seed data yourself.
+1. With both flows still off, return to the **Requests** view, select **Reset lab data**, wait for it to finish, and select **Refresh**.
+
+Confirm `REQ-SEED-003` is **Submitted**, `REQ-SEED-004` is **Approved**, and both have **Availability** set to **Not checked**. Leave both flows off so the restored data stays ready for other exercises.
