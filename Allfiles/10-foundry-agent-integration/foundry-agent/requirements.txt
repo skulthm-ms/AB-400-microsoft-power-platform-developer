@@ -1,0 +1,7 @@
+azure-ai-projects>=2.3.0,<3.0.0
+azure-identity>=1.19.0
+python-dotenv>=1.0.1
+
+# Pinned so Windows ARM64 machines get a prebuilt wheel: the newest cryptography
+# release has no win_arm64 wheel and would need a Rust and MSVC build.
+cryptography==46.0.3

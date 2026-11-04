@@ -1,0 +1,9 @@
+msal>=1.31.0
+python-dotenv>=1.0.1
+aiohttp>=3.10.0
+microsoft-agents-activity>=1.0.0
+microsoft-agents-copilotstudio-client>=1.0.0
+
+# Pinned so Windows ARM64 machines get a prebuilt wheel: the newest cryptography
+# release has no win_arm64 wheel and would need a Rust and MSVC build.
+cryptography==46.0.3
